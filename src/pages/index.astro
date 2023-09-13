@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import CardLaunch from '../components/CardLaunch.astro'
+import {getlatestLaunches} from '../lib/spaceX'
+
+const launches =await getlatestLaunches()
+console.log(launches)
+---
+
+<Layout title="SpaceX Launches">
+	<main>
+		<Header/>
+		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+{launches.map(launch=>(
+	<CardLaunch id={launch.id} img={launch.links.patch.small} details={launch.details} flight_number={launch.flight_number} success={launch.success} wikipedia={launch.wikipedia}/>
+	
+))}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	
+</style>

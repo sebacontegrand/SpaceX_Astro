@@ -1,0 +1,38 @@
+---
+import Header from '../../components/Header.astro'
+import {getLaunchBy,getlatestLaunches} from '../../lib/spaceX'
+import Layout from '../../layouts/Layout.astro'
+const {id}=Astro.params
+
+let launchVideo=null
+if(id) {
+    launchVideo= await getLaunchBy({id})
+}
+export async function getStaticPaths(){
+    const launches= await getlatestLaunches()
+    return launches.map((launchVideo)=>({
+        params:{id:launchVideo.id},
+        
+    }))
+}
+
+
+
+---
+
+<Layout title={`Video Launch ${id}`}>
+<Header />
+<article class="my-2 text-2xl font-bold tracking-tight text-white">
+    ID: {launchVideo?.id}
+    
+<img width={150} height={150} src={launchVideo?.links.patch.small}/>
+<h2 >Launch * {launchVideo?.flight_number}</h2>
+<h3 class="my-2 text-xl font-bold tracking-tight text-white">Details: {launchVideo?.details}</h3>
+<a class="my-2 text-xl font-bold tracking-tight text-white" href={launchVideo?.links.wikipedia}>Wikipedia: {launchVideo?.links.wikipedia}</a>
+
+
+<a class="mx-16 my-16 rounded-lg border shadow-md bg-gray-800 border-red-700 hover:scale-105 hover:bg-gray-700 hover:border-gray-500 transition flex flex-col" href={launchVideo.links.webcast} target="_blank">See on YouTube</a>
+
+</article>
+<a class="mx-16 text-l font-bold tracking-tight text-white"href='/'>Go Back</a>
+</Layout>
